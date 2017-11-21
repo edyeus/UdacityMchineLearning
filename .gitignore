@@ -1,0 +1,31 @@
+.settings/
+.gradle/
+bin/
+build/
+target/
+# lib/  <-- The Job framework batch apps have specific jars checked in for dependencies
+dist/version.txt
+dist/Archive/*
+dist/Working/*
+
+.idea/
+*.iml
+*.ipr
+*.iws
+caches/
+native/
+out/
+
+.classpath
+.project
+#test*.*
+*.*test
+*.log
+# *.jar  <-- The Job framework batch apps have specific jars checked in for dependencies
+pom.xml
+settings-security.xml
+settings.xml
+*.class
+*.launch
+.DS_Store
+daemon/
