@@ -14,8 +14,10 @@ TEMP_FOLDER = '/tmp/'
 
 app = Flask(__name__)
 
+## request handler
 @app.route('/', methods=['POST'])
 def index():
+    ## handle invalid requests
     try:
         payload = json.loads(request.get_data().decode('utf-8'))
         if not validate_payload(payload):
@@ -23,6 +25,7 @@ def index():
     except:
         return json.dumps(errormsg()), 400
 
+    ## predict based on input params
     prediction = predict(payload)
     return json.dumps({"nsp": str(prediction[0])})
 
@@ -38,6 +41,7 @@ def validate_payload(payload):
 def errormsg():
     return {"error":"payload not in expected format","example":"{\"lb\":120,\"astv\":73,\"ds\":0,\"dp\":0,\"width\":64,\"max\":126,\"nmax\":2,\"median\":121,\"tendency\":1,\"ac\":0,\"fm\":0,\"uc\":0,\"mstv\":0.5,\"altv\":43,\"mltv\":2.4,\"dl\":0,\"nzeros\":0,\"variance\":73}"}
 
+## model stored in s3, retrieved by boto3
 def load_model(keyname):
     s3_client = boto3.client('s3')
     s3_client.download_file('edycoco', FOLDER_IN_S3+keyname, TEMP_FOLDER+keyname)
@@ -54,6 +58,7 @@ def clean(data):
     dataCleaned = scale(data)
     return dataCleaned
 
+## same log transformation used at data cleaning before model creation
 def logTrans(data):
     cols = ['ac','fm','uc','mstv','altv','mltv','dl','nzeros','variance']
     for col in cols:
